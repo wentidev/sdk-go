@@ -20,6 +20,24 @@ const (
 	_defaultScopes = "_default.Scopes"
 )
 
+// GetApiV1HealthchecksParams defines parameters for GetApiV1Healthchecks.
+type GetApiV1HealthchecksParams struct {
+	// Target Field to sort by target.
+	Target *string `form:"target,omitempty" json:"target,omitempty"`
+
+	// Protocol Field to sort by protocol.
+	Protocol *string `form:"protocol,omitempty" json:"protocol,omitempty"`
+
+	// Path Field to sort by path.
+	Path *string `form:"path,omitempty" json:"path,omitempty"`
+
+	// Method Field to sort by method.
+	Method *string `form:"method,omitempty" json:"method,omitempty"`
+
+	// Port Field to sort by port.
+	Port *int `form:"port,omitempty" json:"port,omitempty"`
+}
+
 // PostApiV1HealthchecksJSONBody defines parameters for PostApiV1Healthchecks.
 type PostApiV1HealthchecksJSONBody struct {
 	Body        *string                 `json:"body,omitempty"`
@@ -140,7 +158,7 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 	// GetApiV1Healthchecks request
-	GetApiV1Healthchecks(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetApiV1Healthchecks(ctx context.Context, params *GetApiV1HealthchecksParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PostApiV1HealthchecksWithBody request with any body
 	PostApiV1HealthchecksWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -162,8 +180,8 @@ type ClientInterface interface {
 	GetApiV1Metrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) GetApiV1Healthchecks(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetApiV1HealthchecksRequest(c.Server)
+func (c *Client) GetApiV1Healthchecks(ctx context.Context, params *GetApiV1HealthchecksParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiV1HealthchecksRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -259,7 +277,7 @@ func (c *Client) GetApiV1Metrics(ctx context.Context, reqEditors ...RequestEdito
 }
 
 // NewGetApiV1HealthchecksRequest generates requests for GetApiV1Healthchecks
-func NewGetApiV1HealthchecksRequest(server string) (*http.Request, error) {
+func NewGetApiV1HealthchecksRequest(server string, params *GetApiV1HealthchecksParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -275,6 +293,92 @@ func NewGetApiV1HealthchecksRequest(server string) (*http.Request, error) {
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Target != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "target", runtime.ParamLocationQuery, *params.Target); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Protocol != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "protocol", runtime.ParamLocationQuery, *params.Protocol); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Path != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, *params.Path); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Method != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "method", runtime.ParamLocationQuery, *params.Method); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Port != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "port", runtime.ParamLocationQuery, *params.Port); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -511,7 +615,7 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 	// GetApiV1HealthchecksWithResponse request
-	GetApiV1HealthchecksWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1HealthchecksResponse, error)
+	GetApiV1HealthchecksWithResponse(ctx context.Context, params *GetApiV1HealthchecksParams, reqEditors ...RequestEditorFn) (*GetApiV1HealthchecksResponse, error)
 
 	// PostApiV1HealthchecksWithBodyWithResponse request with any body
 	PostApiV1HealthchecksWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiV1HealthchecksResponse, error)
@@ -720,8 +824,8 @@ func (r GetApiV1MetricsResponse) StatusCode() int {
 }
 
 // GetApiV1HealthchecksWithResponse request returning *GetApiV1HealthchecksResponse
-func (c *ClientWithResponses) GetApiV1HealthchecksWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1HealthchecksResponse, error) {
-	rsp, err := c.GetApiV1Healthchecks(ctx, reqEditors...)
+func (c *ClientWithResponses) GetApiV1HealthchecksWithResponse(ctx context.Context, params *GetApiV1HealthchecksParams, reqEditors ...RequestEditorFn) (*GetApiV1HealthchecksResponse, error) {
+	rsp, err := c.GetApiV1Healthchecks(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
