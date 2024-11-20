@@ -4,6 +4,9 @@ output: client.gen.go
 generate:
   models: true
   client: true
-  embedded-spec: true
+  embedded-spec: false
 output-options:
   skip-prune: false
+  response-type-suffix: Response
+  nullable-type: true
+  initialism-overrides: true
